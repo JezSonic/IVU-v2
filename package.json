@@ -1,0 +1,42 @@
+{
+  "name": "irenka_v2",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "build:deploy:live": "npm run build && firebase deploy --only hosting",
+    "build:deploy:beta": "npm run build && firebase hosting:channel:deploy beta",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "7.1.0",
+    "@fortawesome/free-brands-svg-icons": "7.1.0",
+    "@fortawesome/free-regular-svg-icons": "7.1.0",
+    "@fortawesome/free-solid-svg-icons": "7.1.0",
+    "@fortawesome/react-fontawesome": "3.1.0",
+    "@hookform/resolvers": "5.2.2",
+    "@types/google-one-tap": "1.2.6",
+    "class-variance-authority": "0.7.1",
+    "date-fns": "4.1.0",
+    "google-auth-library": "10.4.0",
+    "i18next": "25.6.0",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "i18next-http-backend": "^3.0.2",
+    "next": "15.5.6",
+    "next-auth": "4.24.11",
+    "next-i18next": "15.4.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.2.0",
+    "tailwind-merge": "3.3.1",
+    "zustand": "^5.0.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19.2.2",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

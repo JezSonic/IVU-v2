@@ -1,0 +1,19 @@
+{
+  "2.0.1": {
+    "description": "Fix small UI issues and minor tweaks",
+    "added": [
+      "Clicking on any train number will now redirect to the train in train search"
+    ],
+    "removed": [
+      "UI theme switching due to it's buggy behavior"
+    ],
+    "fixed": [
+      "Smaller rendering issues"
+    ],
+    "date": 1761571360
+  },
+  "2.0.0": {
+    "description": "Added core functionalities",
+    "date": 1760354560
+  }
+}
