@@ -6,7 +6,7 @@ export type ThemeMode = "light" | "dark" | "system";
 export type UiLanguage = "en" | "pl"
 
 interface SettingsStore {
-	language: UiLanguage;
+	language?: UiLanguage;
 	setLanguage: (language: UiLanguage) => void;
 	theme: ThemeMode;
 	setTheme: (themeMode: ThemeMode) => void;
@@ -15,7 +15,7 @@ interface SettingsStore {
 export const useSettingsStore = create<SettingsStore>()(
 	persist((set) => (
 		{
-			language: "en",
+			language: undefined,
 			setLanguage: (lang: UiLanguage) => {
 				i18n.changeLanguage(lang);
 				set({ language: lang });

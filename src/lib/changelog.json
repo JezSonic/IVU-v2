@@ -1,4 +1,9 @@
 {
+  "2.0.2": {
+    "description": "",
+    "fixed": ["Smaller issues with switching UI languages"],
+    "date": 1761675855
+  },
   "2.0.1": {
     "description": "Fix small UI issues and minor tweaks",
     "added": [
