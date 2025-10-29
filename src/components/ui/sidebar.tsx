@@ -4,12 +4,13 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeButton from "./theme-button";
+import LanguageButton from "./language-button";
 import { faBell, faCalendarDays, faGear, faHome, faTrain } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SidebarLink } from "@/lib/data.d";
 import { useTranslation } from "next-i18next";
 import { env, getLatestVersion } from "@/lib/helpers/app";
-import { ThemeMode } from "@/stores/settingsStore";
+import { ThemeMode, UiLanguage } from "@/stores/settingsStore";
 import { useModal } from "@/components/modal/modal-provider";
 import Changelog from "@/components/ui/changelog";
 
@@ -21,6 +22,7 @@ export default function Sidebar() {
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const drawerRef = useRef<HTMLDivElement | null>(null);
 	const hasManyThemes = env<ThemeMode[]>("available_themes").length > 1;
+	const hasManyLanguages = env<UiLanguage[]>("available_languages").length > 1;
 	const links: SidebarLink[] = [
 		{ href: "/", label: t("dashboard"), icon: faHome },
 		{ href: "/alerts", label: t("alerts"), icon: faBell },
@@ -64,6 +66,7 @@ export default function Sidebar() {
 				className="md:hidden fixed top-0 left-0 right-0 h-14 z-30 bg-surface border-b border-border shadow-md flex items-center justify-end px-4">
 				<div className="flex items-center gap-2">
 					{hasManyThemes && <ThemeButton/>}
+					{hasManyLanguages && <LanguageButton folded />}
 					<button
 						aria-label={mobileOpen ? "Close menu" : "Open menu"}
 						aria-expanded={mobileOpen}
@@ -152,6 +155,8 @@ export default function Sidebar() {
 							</li>
 						))}
 					</ul>
+
+					{hasManyLanguages && <LanguageButton folded={collapsed} />}
 				</nav>
 
 				<div

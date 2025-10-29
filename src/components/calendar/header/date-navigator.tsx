@@ -41,6 +41,7 @@ export function DateNavigator({ view, events }: IProps) {
 
 			<div className="flex items-center gap-2">
 				<Button variant="outline" disabled={todaysMonth == selectedDate.getMonth()}
+						size={"xs"}
 						className="size-6.5 px-0 [&_svg]:size-4.5 border-gray-500" onClick={handlePrevious}>
 					<FontAwesomeIcon icon={faChevronLeft} />
 				</Button>
@@ -48,6 +49,7 @@ export function DateNavigator({ view, events }: IProps) {
 				<p className="text-sm text-muted-foreground">{rangeText(view, selectedDate)} {todaysMonth < selectedDate.getMonth() && t("shifts.preview")} </p>
 
 				<Button variant="outline" disabled={todaysMonth < selectedDate.getMonth()}
+						size={"xs"}
 						className="size-6.5 px-0 [&_svg]:size-4.5 border-gray-500" onClick={handleNext}>
 					<FontAwesomeIcon icon={faChevronRight} />
 				</Button>

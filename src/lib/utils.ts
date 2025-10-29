@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { Paginated } from "@/lib/helpers/app";
 
+//@TODO: Maybe remove this?
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

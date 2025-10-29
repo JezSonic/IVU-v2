@@ -45,3 +45,5 @@ config.ts
 .idea/
 firebase.json
 .firebaserc
+
+package-lock.json

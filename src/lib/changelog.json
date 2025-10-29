@@ -4,8 +4,10 @@
     "added": [
       "Alerts filtered by type and paginated",
       "Clicking on Upcoming shift card on Dashboard will now redirect to detailed shift information",
-      "Enhanced background logic for safe and optimized data loading"
-    ]
+      "Enhanced background logic for safe and optimized data loading",
+      "Added language dropdown to navbar for both desktop and mobiles"
+    ],
+    "date": 1761740817
   },
   "2.0.2": {
     "description": "",
