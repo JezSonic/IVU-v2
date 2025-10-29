@@ -111,3 +111,7 @@ button:hover, a:hover, select:hover {
     from { transform: scale(0.9); }
     to { transform: scale(1); }
 }
+
+* {
+    transition: all 250ms ease;
+}

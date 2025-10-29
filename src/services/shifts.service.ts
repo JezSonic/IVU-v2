@@ -11,25 +11,14 @@ export interface ShiftDTO {
 export class ShiftsService {
   constructor(private http: ApiService = api) {}
 
-  list(params?: { from?: string; to?: string; page?: number; pageSize?: number }) {
-    return this.http.get<ShiftDTO[]>("/shifts", { query: params });
+  list(): Promise<Shift[]> {
+    return new Promise((resolve, reject) => {
+		resolve(shifts)
+	})
   }
 
   getById(id: string | number): Shift | undefined {
-    //return this.http.get<ShiftDTO>(`/shifts/${id}`);
 	  return shifts.find((a) => {return a.id == id})
-  }
-
-  create(payload: Partial<ShiftDTO>) {
-    return this.http.post<ShiftDTO, Partial<ShiftDTO>>("/shifts", { body: payload });
-  }
-
-  update(id: string | number, payload: Partial<ShiftDTO>) {
-    return this.http.put<ShiftDTO, Partial<ShiftDTO>>(`/shifts/${id}`, { body: payload });
-  }
-
-  delete(id: string | number) {
-    return this.http.delete<void>(`/shifts/${id}`);
   }
 }
 

@@ -2,17 +2,18 @@
 
 import { KeyboardEvent, useEffect, useState } from "react";
 import Card from "@/components/ui/card";
-import { trains } from "@/lib/data";
 import { TrainData } from "@/lib/data.d";
 import { formatDate, formatTime, getDuration } from "@/lib/utils";
 import { useTranslation } from "next-i18next";
 import { useSearchParams } from "next/navigation";
+import { trainsService } from "@/services";
 
 export default function TrainSearch() {
 	const params = useSearchParams();
 	const number = params.get("number");
 	const [trainNumber, setTrainNumber] = useState<string>("");
 	const [trainDetails, setTrainDetails] = useState<TrainData | null>(null);
+	const [trains, setTrains] = useState<TrainData[]>([]);
 	const [hasSearched, setHasSearched] = useState(false);
 	const { t, i18n } = useTranslation();
 	const handleSearch = (number: string) => {
@@ -22,10 +23,20 @@ export default function TrainSearch() {
 			setHasSearched(true);
 			return;
 		}
-		const details = trains.find((a) => a.number === num) || null;
-		setTrainDetails(details);
+
+		trainsService.getById(num)
+			.then(data => {
+				setTrainDetails(data);
+			})
 		setHasSearched(true);
 	};
+
+	useEffect(() => {
+		trainsService.list()
+			.then(data => {
+				setTrains(data);
+			})
+	}, []);
 
 	useEffect(() => {
 		if (number == null) {
@@ -45,7 +56,8 @@ export default function TrainSearch() {
 		<div className="p-4 flex gap-3 flex-col flex-wrap">
 			<div>
 				<h1 className="text-2xl font-bold">{t("trains.search")}</h1>
-				<p className="text-sm text-gray-600 dark:text-gray-400">{t("trains.search.description")} {[trains[0].number, trains[10].number, trains[20].number].join(", ")}</p>
+				{trains[0] == undefined ? (<p className="text-sm text-gray-600 dark:text-gray-400">{t("loading")}</p>) : (
+					<p className="text-sm text-gray-600 dark:text-gray-400">{t("trains.search.description")} {[trains[0].number, trains[10].number, trains[20].number].join(", ")}</p>)}
 			</div>
 
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -59,7 +71,7 @@ export default function TrainSearch() {
 							pattern="[0-9]*"
 							type="text"
 							placeholder={t("trains.enter-number.placeholder", {
-								number: trains[9].number
+								number: trains[9] == undefined ? t("loading") : trains[9].number
 							})}
 							value={trainNumber}
 							onChange={(e) => setTrainNumber(e.target.value.replace(/\D+/g, ""))}
@@ -68,16 +80,19 @@ export default function TrainSearch() {
 						/>
 						<div className="flex flex-wrap gap-2 text-sm text-gray-600 dark:text-gray-400 items-center">
 							<span>{t("trains.enter-number.examples")}</span>
-							{[trains[0].number, trains[10].number, trains[20].number].map((ex) => (
-								<button
-									type="button"
-									key={ex}
-									onClick={() => setTrainNumber(ex.toString())}
-									className="px-2 py-1 rounded bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/15"
-								>
-									{ex}
-								</button>
-							))}
+							{trains[0] == undefined ? (<span>{t("loading")}</span>) :
+								(
+									[trains[0].number, trains[10].number, trains[20].number].map((ex) => (
+										<button
+											type="button"
+											key={ex}
+											onClick={() => setTrainNumber(ex.toString())}
+											className="px-2 py-1 rounded bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/15"
+										>
+											{ex}
+										</button>
+									))
+								)}
 						</div>
 						<button
 							onClick={() => {handleSearch(trainNumber)}}

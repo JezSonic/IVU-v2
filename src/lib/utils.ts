@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { Paginated } from "@/lib/helpers/app";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -14,3 +15,12 @@ export const getDuration = (from?: Date, to?: Date) => {
 	const m = Math.round((ms % 3600000) / 60000);
 	return `${h}h ${m}m`;
 };
+
+export const paginate = <T>(array: T[], page_size: number = 5, page_number: number = 1): Paginated<T[]> =>  {
+	// human-readable page numbers usually start with 1, so we reduce 1 in the first argument
+	return {
+		page: page_number,
+		data: array.slice((page_number - 1) * page_size, page_number * page_size),
+		all_pages: Math.ceil(array.length / page_size),
+	}
+}

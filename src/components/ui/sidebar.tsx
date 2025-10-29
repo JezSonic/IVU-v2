@@ -126,14 +126,14 @@ export default function Sidebar() {
 
 			{/* Desktop sidebar */}
 			<aside
-				className={`hidden md:flex flex-col h-screen sticky top-0 left-0 z-20 bg-surface border-r border-border shadow-md transition-all duration-200 ease-in-out ${
+				className={`hidden h-screen md:flex overflow-hidden flex-col sticky top-0 left-0 z-20 bg-surface border-r border-border shadow-md transition-all duration-200 ease-in-out ${
 					collapsed ? "w-16" : "w-64"
 				}`}
 				aria-label="Sidebar"
 			>
 				{hasManyThemes && <ThemeButton folded={collapsed}/>}
-				<nav className={`flex-1 overflow-auto ${hasManyThemes && "border-t border-border"}`}>
-					<ul className={`flex flex-col gap-1 ${collapsed && "items-center"}`}>
+				<nav className={`flex-1 overflow-auto ${hasManyThemes ? "border-t border-border" : "mt-2"}`}>
+					<ul className={`flex flex-col gap-2 ${collapsed && "items-center"}`}>
 						{links.map((l) => (
 							<li key={l.href}>
 								<Link

@@ -3,26 +3,50 @@ import Alert from "@/components/ui/alert";
 import Shift from "@/components/ui/shift";
 import Card from "@/components/ui/card";
 import Link from "next/link";
-import { shifts, trains } from "@/lib/data";
+import { Alert as AlertItem, Shift as ShiftItem, TrainData } from "@/lib/data.d";
 import { formatDate, formatTime, getDuration } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useSettingsStore } from "@/stores/settingsStore";
+import { Paginated } from "@/lib/helpers/app";
+import { alertsService, shiftsService, trainsService } from "@/services";
+import AlertModal from "@/app/alerts/alert-modal";
+import { useModal } from "@/components/modal/modal-provider";
 
 export default function Home() {
 	const router = useRouter();
 	const [now, setNow] = useState<Date|undefined>();
+	const { openModal } = useModal();
+	const [alerts, setAlerts] = useState<Paginated<AlertItem[]>>()
+	const [nextShift, setNextShift] = useState<ShiftItem|undefined>(undefined);
+	const [trains, setTrains] = useState<TrainData[]|undefined>(undefined)
+	const [totalShifts, setTotalShifts] = useState<number|undefined>(undefined);
 	useEffect(() => {
 		setNow(new Date())
+		alertsService.list({page: 1, pageSize: 3})
+			.then((data) => {
+				setAlerts(data);
+			})
+
+		shiftsService.list().then((data) => {
+			if (data.length > 0) {
+				setNextShift(data[0]);
+			}
+
+			setTotalShifts(data.length)
+		})
+
+		trainsService.list().then((data) => {
+			setTrains(data)
+		})
 	}, []);
 	const {language} = useSettingsStore()
-	const nextShift = shifts?.[0];
-	const totalShifts = shifts?.length ?? 0;
 	const { t } = useTranslation();
 	if (now == undefined) {
 		return;
 	}
+
 	const dateStr = now.toLocaleDateString();
 	const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 	return (
@@ -37,7 +61,7 @@ export default function Home() {
 
 			{/* Quick Stats */}
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-				<Card>
+				<Card onClick={() => router.push("/shifts")} className={"cursor-pointer hover:bg-surface/80"}>
 					<div className="text-sm text-gray-400">{t("upcoming_shifts")}</div>
 					<div className="text-2xl font-bold">{totalShifts}</div>
 					{nextShift && (
@@ -45,7 +69,7 @@ export default function Home() {
 							className="text-xs text-gray-400">{t("shifts.next")}: {formatDate(nextShift.startDate, language)} {formatTime(nextShift.startDate, language)}</div>
 					)}
 				</Card>
-				<Card>
+				<Card onClick={() => router.push("/alerts")} className={"cursor-pointer hover:bg-surface/80"}>
 					<div className="text-sm text-gray-400">{t("alerts")}</div>
 					<div className="text-2xl font-bold">3</div>
 					<div className="text-xs text-gray-400">{t("latest_updates_below")}</div>
@@ -55,7 +79,7 @@ export default function Home() {
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
 				{/* Upcoming Shift Detailed */}
 				<div className="lg:col-span-2 flex flex-col gap-3">
-					<Card title={t("upcoming_shift")}
+					<Card title={t("upcoming_shift")} className={"cursor-pointer hover:bg-surface/80"} onClick={() => nextShift && router.push(`shifts/?id=${nextShift.id}`)}
 						  footer={<Link className="text-blue-400 hover:underline"
 										href="/shifts">{t("view_all_shifts")}</Link>}>
 						{nextShift ? (
@@ -69,40 +93,51 @@ export default function Home() {
 					<Card title={t("upcoming_trains")}
 						  footer={<Link className="text-blue-400 hover:underline"
 										href="/trains">{t("go_to_train_search")}</Link>}>
-						<div className="flex flex-col gap-2">
-							{trains.slice(0, 3).map((t) => (
-								<div key={t.number}
-									 className="flex items-center justify-between p-2 rounded cursor-pointer bg-white/10" onClick={() => router.push(`trains?number=${t.number}`)}>
-									<div className="flex flex-col">
-										<div className="font-semibold">{t.number} {t.name ? `— ${t.name}` : ""}</div>
-										<div className="text-xs text-gray-400">
-											{t.startStation} ({formatTime(t.startDate, language)})
-											→ {t.endStation} ({formatTime(t.endDate, language)})
+						{trains == undefined ? (<p>{t("loading")}</p>) : (
+							<div className="flex flex-col gap-2">
+								{trains.slice(0, 3).map((t) => (
+									<div key={t.number}
+										 className="flex items-center justify-between p-2 rounded cursor-pointer bg-white/10 hover:bg-white/5" onClick={() => router.push(`trains?number=${t.number}`)}>
+										<div className="flex flex-col">
+											<div className="font-semibold">{t.number} {t.name ? `— ${t.name}` : ""}</div>
+											<div className="text-xs text-gray-400">
+												{t.startStation} ({formatTime(t.startDate, language)})
+												→ {t.endStation} ({formatTime(t.endDate, language)})
+											</div>
 										</div>
+										<div
+											className="text-xs text-gray-400">{getDuration(t.startDate, t.endDate)}</div>
 									</div>
+								))}
+								{trains.length === 0 && (
 									<div
-										className="text-xs text-gray-400">{getDuration(t.startDate, t.endDate)}</div>
-								</div>
-							))}
-							{trains.length === 0 && (
-								<div
-									className="text-sm text-gray-400">{t("no_trains_scheduled")}</div>
-							)}
-						</div>
+										className="text-sm text-gray-400">{t("no_trains_scheduled")}</div>
+								)}
+							</div>
+						)}
 					</Card>
 				</div>
 
 				{/* Alerts and Quick Actions */}
 				<div className="flex flex-col gap-3">
-					<Card title={t("alerts")}>
-						<Alert title="Track maintenance near Katowice"
-							   description="Expect minor delays on routes passing through Katowice between 12:00–16:00."
-							   timestamp={now.getTime()} severity="warning"/>
-						<Alert title="System update" description="New timetable data has been loaded successfully."
-							   timestamp={now.getTime()} severity="success"/>
-						<Alert title="Crew change required"
-							   description="Second train driver needed for Train 12345 after Poznań."
-							   timestamp={now.getTime()} severity="error"/>
+					<Card title={t("alerts")} footer={<Link className="text-blue-400 hover:underline" href="/alerts">{t("view_all_alerts")}</Link>}>
+						<div className="flex flex-col gap-3">
+							{alerts == undefined ? <p>{t("loading")}</p> :
+								alerts.data.length > 0 ? (
+									alerts.data.map((a) => (
+										<button
+											key={a.id}
+											onClick={() => openModal(<AlertModal selected={a} />)}
+											className="text-left hover:bg-white/[.06] focus:bg-white/[.08] rounded"
+										>
+											<Alert title={a.title} description={a.description} timestamp={a.timestamp}
+												   severity={a.severity}/>
+										</button>
+									))
+								) : <p>{t("alerts.no_alerts")}</p>
+
+							}
+						</div>
 					</Card>
 
 					<Card title={t("quick_actions")}>

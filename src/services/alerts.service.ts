@@ -1,31 +1,35 @@
-import { ApiService, api } from "@/services/api";
-
-export interface AlertDTO {
-  id: string | number;
-  type?: string;
-  message?: string;
-  read?: boolean;
-  [key: string]: any;
-}
+import { api, ApiService } from "@/services/api";
+import { alerts } from "@/lib/data";
+import { Alert } from "@/lib/data.d"
+import { paginate } from "@/lib/utils";
+import { Paginated } from "@/lib/helpers/app";
 
 export class AlertsService {
-  constructor(private http: ApiService = api) {}
+	constructor(private http: ApiService = api) {
+	}
 
-  list(params?: { unreadOnly?: boolean; page?: number; pageSize?: number }) {
-    return this.http.get<AlertDTO[]>("/alerts", { query: params });
-  }
+	list(params?: { unreadOnly?: boolean; page?: number; pageSize?: number, severity?: "success" | "warning" | "error" | "info" }) {
+		const _alerts = alerts(new Date());
 
-  getById(id: string | number) {
-    return this.http.get<AlertDTO>(`/alerts/${id}`);
-  }
+		if (params?.unreadOnly) {
+			//@TODO: Gather unread alerts and filter them out
+		}
 
-  markRead(id: string | number) {
-    return this.http.patch<AlertDTO, Partial<AlertDTO>>(`/alerts/${id}`, { body: { read: true } });
-  }
+		return new Promise<Paginated<Alert[]>>((resolve, reject) => {
+			if (params?.severity) {
+				resolve(paginate(_alerts.filter((a) => a.severity == params?.severity), params?.pageSize, params?.page))
+			}
+			resolve(paginate(_alerts, params?.pageSize, params?.page))
+		})
+	}
 
-  delete(id: string | number) {
-    return this.http.delete<void>(`/alerts/${id}`);
-  }
+	getById(id: string | number) {
+		return this.http.get<Alert>(`/alerts/${id}`);
+	}
+
+	// markRead(id: string | number) {
+	// 	return this.http.patch<Alert, Partial<Alert>>(`/alerts/${id}`, { body: { read: true } });
+	// }
 }
 
 export const alertsService = new AlertsService();

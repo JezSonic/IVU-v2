@@ -1,4 +1,6 @@
 import { ApiService, api } from "@/services/api";
+import { trains } from "@/lib/data";
+import { TrainData } from "@/lib/data.d";
 
 // Placeholder types; replace with your real API types
 export interface TrainDTO {
@@ -10,24 +12,16 @@ export interface TrainDTO {
 export class TrainsService {
   constructor(private http: ApiService = api) {}
 
-  list(params?: { page?: number; pageSize?: number; search?: string }) {
-    return this.http.get<TrainDTO[]>("/trains", { query: params });
+  list(): Promise<TrainData[]>  {
+	  return new Promise<TrainData[]> ((resolve, reject) => {
+		  resolve(trains)
+	  })
   }
 
-  getById(id: string | number) {
-    return this.http.get<TrainDTO>(`/trains/${id}`);
-  }
-
-  create(payload: Partial<TrainDTO>) {
-    return this.http.post<TrainDTO, Partial<TrainDTO>>("/trains", { body: payload });
-  }
-
-  update(id: string | number, payload: Partial<TrainDTO>) {
-    return this.http.put<TrainDTO, Partial<TrainDTO>>(`/trains/${id}`, { body: payload });
-  }
-
-  delete(id: string | number) {
-    return this.http.delete<void>(`/trains/${id}`);
+  getById(id: number): Promise<TrainData | null> {
+    return new Promise<TrainData | null> ((resolve, reject) => {
+		resolve(trains.find((a: TrainData) => a.number === id) || null)
+	})
   }
 }
 

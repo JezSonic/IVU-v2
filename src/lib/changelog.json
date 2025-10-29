@@ -1,4 +1,12 @@
 {
+  "2.0.3": {
+    "description": "New Quality-Of-Life additions and changes in data-loading logic to improve performance and overall stability",
+    "added": [
+      "Alerts filtered by type and paginated",
+      "Clicking on Upcoming shift card on Dashboard will now redirect to detailed shift information",
+      "Enhanced background logic for safe and optimized data loading"
+    ]
+  },
   "2.0.2": {
     "description": "",
     "fixed": ["Smaller issues with switching UI languages"],

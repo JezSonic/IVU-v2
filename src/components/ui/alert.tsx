@@ -1,5 +1,6 @@
 "use client";
 import { useTranslation } from "next-i18next";
+import Markdown from 'react-markdown'
 
 export default function Alert({
 								  title, description, timestamp, severity
@@ -21,7 +22,7 @@ export default function Alert({
 				<div className="text-base font-semibold">{title}</div>
 				<span className="text-sm text-muted-foreground">{new Date(timestamp).toLocaleString(i18n.language)}</span>
 			</div>
-			<p className="text-sm text-foreground">{description}</p>
+			<Markdown>{description}</Markdown>
 		</div>
 	);
 }

@@ -1,4 +1,4 @@
-import { CrewData, DriverProfile, Shift, TrainData, ShiftOperation, type TrainType } from "./data.d";
+import { type Alert, CrewData, DriverProfile, Shift, ShiftOperation, TrainData, type TrainType } from "./data.d";
 
 // Generate dummy shifts following constraints:
 // - Multiple shifts can exist within a 12-hour work block, but total time (active segments + breaks) ≤ 12h
@@ -149,7 +149,7 @@ function generateShifts(startFrom: Date, days: number): Shift[] {
 			operations.push({
 				type: "passenger_train",
 				crew: "train_driver",
-				trainNumber: 8000 + randomInt(0, 9999),
+				trainNumber: 1000 + randomInt(0, 99999),
 				fromStation: fromCity,
 				startTime: currentStart,
 				toStation: toCity,
@@ -214,31 +214,31 @@ const generateTrainsFromShifts = (shifts: Shift[]): TrainData[] => {
 		_operations = _operations.concat(shift.operations);
 	}
 
-	let _data: TrainData[] = []
+	let _data: TrainData[] = [];
 	for (const operation of _operations) {
 		if (operation.trainNumber == undefined) {
 			continue;
 		}
 
-		const _types: TrainType[] = ["EC", "EN", "EIP", "EIC", "IC", "TLK"]
-		const _names = ["Barbakan", "Bolko", "Cegielski", "Chemik", "Chopin", "Galicja", "Górnik", "Górski", "Hańcza", "Hutnik", "Jagiełło", "Wyspiański", "Karkonosze", "Matejko", "Mazury", "Przemyślanin", "Reymont", "Mehoffer", "Wisłok", "San", "Wawel", "Witkacy", "Witos", "Ustronie", "Ślązak", "Zefir", "Łukasiewicz", "Wyczółkowski", "Włókniarz"]
+		const _types: TrainType[] = ["EC", "EN", "EIP", "EIC", "IC", "TLK"];
+		const _names = ["Barbakan", "Bolko", "Cegielski", "Chemik", "Chopin", "Galicja", "Górnik", "Górski", "Hańcza", "Hutnik", "Jagiełło", "Wyspiański", "Karkonosze", "Matejko", "Mazury", "Przemyślanin", "Reymont", "Mehoffer", "Wisłok", "San", "Wawel", "Witkacy", "Witos", "Ustronie", "Ślązak", "Zefir", "Łukasiewicz", "Wyczółkowski", "Włókniarz"];
 		let _tmp: TrainData = {
 			number: operation.trainNumber,
-			name: _names[Math.floor(rand()*_names.length)],
-			type: _types[Math.floor(rand()*_types.length)],
+			name: _names[Math.floor(rand() * _names.length)],
+			type: _types[Math.floor(rand() * _types.length)],
 			crewDetails: makeCrew(),
 			startDate: operation.startTime,
 			endDate: operation.endTime,
 			startStation: operation.fromStation,
 			endStation: operation.toStation
-		}
-		_data.push(_tmp)
+		};
+		_data.push(_tmp);
 	}
 
 	return _data;
-}
+};
 
-export const trains: TrainData[] = generateTrainsFromShifts(shifts)
+export const trains: TrainData[] = generateTrainsFromShifts(shifts);
 
 
 export const driverProfile: DriverProfile = {
@@ -257,3 +257,129 @@ export const driverProfile: DriverProfile = {
 	],
 	avatarUrl: "",
 };
+
+export const alerts = (now: Date): Alert[] => [
+	{
+		id: "a1",
+		title: "Track maintenance near Katowice",
+		description:
+			"Expect minor delays on routes passing through Katowice between 12:00–16:00. Maintenance crew on site.",
+		severity: "warning",
+		timestamp: now.getTime() - 10 * 60 * 1000,
+		meta: { location: "Katowice", time_window: "12:00–16:00" },
+	}, {
+		id: "a2",
+		title: "System update",
+		description: "New timetable data has been loaded successfully.",
+		severity: "success",
+		timestamp: now.getTime() - 45 * 60 * 1000,
+		meta: { applies_to: "Timetable Service", version: "2025.10.16" },
+	}, {
+		id: "a3",
+		title: "Crew change required",
+		description:
+			"Second train driver needed for Train 12345 after Poznań due to scheduling constraints.",
+		severity: "error",
+		timestamp: now.getTime() - 2 * 60 * 60 * 1000,
+		meta: { train: "IC 12345", location: "Poznań" },
+	}, {
+		id: "a4",
+		title: "Information: Weather advisory",
+		description: "Strong winds expected in Silesia region from 18:00. Monitor overhead lines.",
+		severity: "info",
+		timestamp: now.getTime() - 3 * 60 * 60 * 1000,
+		meta: { region: "Silesia", time_window: "18:00" },
+	}, {
+		id: "a101",
+		title: "Success: Schedule Update Complete",
+		description: "The latest train schedule update (Version 3.2) has been successfully deployed across all systems. No action required.",
+		severity: "success",
+		timestamp: now.getTime() - 10 * 60 * 1000, // 10 minutes ago
+		meta: {
+			version: "3.2",
+			applies_to: "All Systems"
+		},
+	}, {
+		id: "a102",
+		title: "Warning: Signal Interruption Near Central Station",
+		description: "Temporary signal failure reported near **Central Station**. Expect minor delays (5-10 minutes) on lines R1 and R4.",
+		severity: "warning",
+		timestamp: now.getTime() - 45 * 60 * 1000, // 45 minutes ago
+		meta: {
+			location: "Central Station",
+			train: "R1, R4",
+			time_window: "Immediate"
+		},
+	}, {
+		id: "a103",
+		title: "Error: System Downtime - Data Sync Failure",
+		description: "Critical failure in the primary data synchronization process. Affected services are currently using cached data. Technical teams are investigating.",
+		severity: "error",
+		timestamp: now.getTime() - 2 * 60 * 60 * 1000, // 2 hours ago
+		meta: {
+			applies_to: "Data Sync Service",
+			time_window: "Ongoing"
+		},
+	}, {
+		id: "a104",
+		title: "Information: Planned Maintenance Tonight",
+		description: "Scheduled database maintenance will occur tonight, affecting reporting features. All operations will remain functional.",
+		severity: "info",
+		timestamp: now.getTime() - 12 * 60 * 60 * 1000, // 12 hours ago
+		meta: {
+			time_window: "23:00 - 03:00",
+			applies_to: "Reporting Features"
+		},
+	}, {
+		id: "a105",
+		title: "Warning: High Wind Advisory in Coastal Region",
+		description: "Due to predicted high winds, speed restrictions are imposed on all trains operating in the **Coastal Region**. Delays up to 20 minutes possible.",
+		severity: "warning",
+		timestamp: now.getTime() - 3 * 60 * 60 * 1000, // 3 hours ago
+		meta: {
+			region: "Coastal",
+			train: "All",
+			time_window: "Until further notice"
+		},
+	}, {
+		id: "a106",
+		title: "Information: Regional Travel Advisory",
+		description: "A minor traffic accident outside the station is causing limited bus connections. Passengers traveling to the **Mazovia** region should expect small delays in surface transit.",
+		severity: "info",
+		timestamp: now.getTime() - 25 * 60 * 1000, // 25 minutes ago
+		meta: {
+			region: "Mazovia",
+			applies_to: "Bus Connections"
+		},
+	}, {
+		id: "a107",
+		title: "Warning: Service Disruption on R5 Line",
+		description: "The **R5 line** is experiencing a service delay of approximately 15 minutes due to an operational issue. We expect normal service to resume shortly.",
+		severity: "warning",
+		timestamp: now.getTime() - 60 * 60 * 1000, // 1 hour ago
+		meta: {
+			train: "R5",
+			time_window: "Immediate"
+		},
+	}, {
+		id: "a108",
+		title: "Error: API Timeout - Train Tracking",
+		description: "The live train tracking API is currently unreachable, leading to stale or missing location data in applications. Core services are unaffected.",
+		severity: "error",
+		timestamp: now.getTime() - 5 * 60 * 1000, // 5 minutes ago
+		meta: {
+			applies_to: "Train Tracking API",
+			time_window: "Ongoing"
+		},
+	}, {
+		id: "a109",
+		title: "Success: New App Version Available",
+		description: "A **new application version (1.1.0)** is now available with bug fixes and performance improvements. Please update for the best experience.",
+		severity: "success",
+		timestamp: now.getTime() - 24 * 60 * 60 * 1000, // 1 day ago
+		meta: {
+			version: "1.1.0",
+			applies_to: "Mobile App"
+		},
+	},
+];

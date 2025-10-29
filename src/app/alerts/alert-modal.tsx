@@ -1,6 +1,7 @@
 import { useTranslation } from "next-i18next";
 import { useModal } from "@/components/modal/modal-provider";
 import { Alert } from "@/lib/data.d"
+import Markdown from 'react-markdown'
 
 export default function AlertModal({selected}: {selected: Alert}) {
 	const { t, i18n } = useTranslation();
@@ -19,7 +20,9 @@ export default function AlertModal({selected}: {selected: Alert}) {
 				</div>
 			</div>
 			<div className="">
-				<p className="text-sm leading-relaxed text-gray-800 dark:text-gray-200">{selected.description}</p>
+				<Markdown>
+					{selected.description}
+				</Markdown>
 
 				{selected.meta && (
 					<div className="mt-4">
