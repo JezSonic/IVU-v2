@@ -3,7 +3,7 @@ const nextConfig: NextConfig = {
 	images: {
 		unoptimized: true
 	},
-
+    output: "export",
 	experimental: {
 		optimizePackageImports: [
 			'@fortawesome/fontawesome-svg-core',
