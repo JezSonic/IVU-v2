@@ -4,7 +4,7 @@ import { KeyboardEvent, useEffect, useState } from "react";
 import Card from "@/components/ui/card";
 import { TrainData } from "@/lib/data.d";
 import { formatDate, formatTime, getDuration } from "@/lib/utils";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "next/navigation";
 import { trainsService } from "@/services";
 
@@ -167,11 +167,70 @@ export default function TrainSearch() {
 									</ul>
 								</div>
 
-								{"assignedLoco" in trainDetails && (
-									<div className="mt-2 text-sm">
-										<strong>{t("assigned_vehicle")}:</strong> {(trainDetails as any).assignedLoco || "—"}
+								<div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+									<div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm mb-4">
+										<div>
+											<span className="text-gray-500 dark:text-gray-400">{t("shift.length")}: </span>
+											<span className="font-medium">{trainDetails.length ?? "—"} m</span>
+										</div>
+										<div>
+											<span className="text-gray-500 dark:text-gray-400">{t("shift.weight")}: </span>
+											<span className="font-medium">{trainDetails.weight ?? "—"} t</span>
+										</div>
+										<div className="sm:col-span-2">
+											<span className="text-gray-500 dark:text-gray-400">{t("shift.rolling_stock")}: </span>
+											<span className="font-medium italic text-xs font-mono">{trainDetails.rollingStock ?? "—"}</span>
+										</div>
 									</div>
-								)}
+
+									{trainDetails.vehicles && trainDetails.vehicles.length > 0 && (
+										<div className="mt-3 overflow-x-auto">
+											<table className="min-w-full text-[10px] border border-gray-200 dark:border-gray-700">
+												<thead className="bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+													<tr>
+														<th className="px-1 py-1 border-r border-gray-200 dark:border-gray-700">{t("shift.vehicles.lp")}</th>
+														<th className="px-1 py-1 border-r border-gray-200 dark:border-gray-700">{t("shift.vehicles.country")}</th>
+														<th className="px-1 py-1 border-r border-gray-200 dark:border-gray-700">{t("shift.vehicles.operator")}</th>
+														<th className="px-1 py-1 border-r border-gray-200 dark:border-gray-700">{t("shift.vehicles.type")}</th>
+														<th className="px-1 py-1 border-r border-gray-200 dark:border-gray-700">{t("shift.vehicles.number")}</th>
+														<th className="px-1 py-1 border-r border-gray-200 dark:border-gray-700">{t("shift.vehicles.length")}</th>
+														<th className="px-1 py-1 border-r border-gray-200 dark:border-gray-700">{t("shift.vehicles.load_weight")}</th>
+														<th className="px-1 py-1">{t("shift.vehicles.own_weight")}</th>
+													</tr>
+												</thead>
+												<tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+													{trainDetails.vehicles.map((v, vIdx) => (
+														<tr key={vIdx} className="bg-white dark:bg-gray-900/50">
+															<td className="px-1 py-1 border-r border-gray-200 dark:border-gray-700 text-center">{v.id}</td>
+															<td className="px-1 py-1 border-r border-gray-200 dark:border-gray-700 text-center">{v.country}</td>
+															<td className="px-1 py-1 border-r border-gray-200 dark:border-gray-700 text-center">{v.operator}</td>
+															<td className="px-1 py-1 border-r border-gray-200 dark:border-gray-700 text-center font-bold">{v.type}</td>
+															<td className="px-1 py-1 border-r border-gray-200 dark:border-gray-700 font-mono">{v.number}</td>
+															<td className="px-1 py-1 border-r border-gray-200 dark:border-gray-700 text-right">{v.length}</td>
+															<td className="px-1 py-1 border-r border-gray-200 dark:border-gray-700 text-right">{v.loadWeight ?? "—"}</td>
+															<td className="px-1 py-1 text-right">{v.ownWeight}</td>
+														</tr>
+													))}
+												</tbody>
+											</table>
+										</div>
+									)}
+
+									<div className="flex gap-2 mt-4">
+										<button 
+											className="flex-1 p-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
+											onClick={() => alert("Downloading schedule...")}
+										>
+											{t("shift.download_schedule")}
+										</button>
+										<button 
+											className="flex-1 p-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
+											onClick={() => alert("Viewing schedule...")}
+										>
+											{t("shift.view_schedule")}
+										</button>
+									</div>
+								</div>
 
 								<div className="mt-3 text-sm text-gray-500 dark:text-gray-400">
 									{t("demo_content")}

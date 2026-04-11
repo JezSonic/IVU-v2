@@ -8,7 +8,7 @@ import LanguageButton from "./language-button";
 import { faBell, faCalendarDays, faGear, faHome, faTrain } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SidebarLink } from "@/lib/data.d";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import { env, getLatestVersion } from "@/lib/helpers/app";
 import { ThemeMode, UiLanguage } from "@/stores/settingsStore";
 import { useModal } from "@/components/modal/modal-provider";

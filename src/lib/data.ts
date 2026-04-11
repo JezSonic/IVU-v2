@@ -1,4 +1,31 @@
-import { type Alert, CrewData, DriverProfile, Shift, ShiftOperation, TrainData, type TrainType } from "./data.d";
+import { type Alert, CrewData, DriverProfile, Shift, ShiftOperation, TrainData, type TrainType, Vehicle } from "./data.d";
+
+const locoPool: Vehicle[] = [
+	{ id: "L1", country: "PL", operator: "PKPIC", type: "EU07", number: "085", length: 15.9, ownWeight: 80 },
+	{ id: "L2", country: "PL", operator: "PKPIC", type: "EP09", number: "047", length: 16.4, ownWeight: 84 },
+];
+
+const wagonPool: Vehicle[] = [
+	{ id: "W1", country: "PL", operator: "PKPIC", type: "B9nou", number: "51 51 19-70 003-4", length: 24.5, loadWeight: 5, ownWeight: 33.5 },
+	{ id: "W2", country: "PL", operator: "PKPIC", type: "WRmnouz", number: "61 51 88-70 191-1", length: 26.4, loadWeight: 3, ownWeight: 53 },
+	{ id: "W3", country: "PL", operator: "PKPIC", type: "B10nou", number: "51 51 20-70 829-9", length: 24.5, loadWeight: 6, ownWeight: 39.5 },
+	{ id: "W4", country: "PL", operator: "PKPIC", type: "B10nou", number: "51 51 20-71102-0", length: 24.5, loadWeight: 6, ownWeight: 39.5 },
+	{ id: "W5", country: "PL", operator: "PKPIC", type: "B10nou", number: "50 51 20-08 607-7", length: 24.5, loadWeight: 6, ownWeight: 39.5 },
+	{ id: "W6", country: "PL", operator: "PKPIC", type: "B11gmnouz", number: "61 51 21-70 107-7", length: 26.4, loadWeight: 5, ownWeight: 52 },
+	{ id: "W7", country: "PL", operator: "PKPIC", type: "B11mnouz", number: "61 51 21-70 064-0", length: 26.4, loadWeight: 5, ownWeight: 52 },
+	{ id: "W8", country: "PL", operator: "PKPIC", type: "A9mnouz", number: "61 51 19-70 234-3", length: 26.4, loadWeight: 4, ownWeight: 48 },
+	{ id: "W9", country: "PL", operator: "PKPIC", type: "A9emnouz", number: "61 5119-70 214-5", length: 26.4, loadWeight: 4, ownWeight: 50 },
+	{ id: "W10", country: "PL", operator: "PKPIC", type: "B11mnouz", number: "61 51 21-70 098-8", length: 26.4, loadWeight: 5, ownWeight: 52 },
+	{ id: "W11", country: "PL", operator: "PKPIC", type: "B10bmnouz", number: "61 51 20-71105-1", length: 26.4, loadWeight: 5, ownWeight: 50 },
+	{ id: "W12", country: "PL", operator: "PKPIC", type: "B10nou", number: "50 51 20-00 608-3", length: 24.5, loadWeight: 6, ownWeight: 39.5 },
+	{ id: "W13", country: "PL", operator: "PKPIC", type: "B9nou", number: "50 5119-00 189-7", length: 24.5, loadWeight: 5, ownWeight: 33.5 },
+	{ id: "W14", country: "PL", operator: "PKPIC", type: "B9nou", number: "50 51 19-08 136-0", length: 24.5, loadWeight: 5, ownWeight: 33.5 },
+];
+
+const emuPool: Vehicle[] = [
+	{ id: "E1", country: "PL", operator: "PKPIC", type: "ED250", number: "2 150 001-1", length: 60.4, loadWeight: 34, ownWeight: 395 },
+	{ id: "E2", country: "PL", operator: "PKPIC", type: "ED160", number: "001", length: 45.5, loadWeight: 20, ownWeight: 90 },
+];
 
 // Generate dummy shifts following constraints:
 // - Multiple shifts can exist within a 12-hour work block, but total time (active segments + breaks) ≤ 12h
@@ -122,7 +149,6 @@ function generateShifts(startFrom: Date, days: number): Shift[] {
 
 		// Build operations timeline
 		const operations: Shift["operations"] = [];
-		const fmt = (d: Date) => d.toTimeString().slice(0, 5);
 		// Administration - Shift start (5 minutes)
 		const adminStartEnd = addHours(segmentStart, 5 / 60);
 		operations.push({
@@ -146,6 +172,26 @@ function generateShifts(startFrom: Date, days: number): Shift[] {
 			const segmentEnd = addHours(currentStart, dur);
 			const fromCity = chain[i];
 			const toCity = chain[i + 1];
+			const isEMU = rand() < 0.4;
+			const currentVehicles: Vehicle[] = [];
+			if (isEMU) {
+				const emu = emuPool[Math.floor(rand() * emuPool.length)];
+				currentVehicles.push({ ...emu, id: "L1" });
+			} else {
+				const loco = locoPool[Math.floor(rand() * locoPool.length)];
+				currentVehicles.push({ ...loco, id: "L1" });
+				const wagonCount = randomInt(4, 9);
+				const availableWagons = [...wagonPool];
+				for (let j = 0; j < wagonCount && availableWagons.length > 0; j++) {
+					const idx = Math.floor(rand() * availableWagons.length);
+					const wagon = availableWagons.splice(idx, 1)[0];
+					currentVehicles.push({ ...wagon, id: (j + 1).toString() });
+				}
+			}
+			const totalLength = Number(currentVehicles.reduce((acc, v) => acc + v.length, 0).toFixed(1));
+			const totalWeight = Number(currentVehicles.reduce((acc, v) => acc + v.ownWeight + (v.loadWeight ?? 0), 0).toFixed(1));
+			const rollingStockSummary = isEMU ? `${currentVehicles[0].type} (EMU)` : `${currentVehicles[0].type}-${currentVehicles[0].number} + ${currentVehicles.length - 1} wagons`;
+
 			operations.push({
 				type: "passenger_train",
 				crew: "train_driver",
@@ -154,13 +200,17 @@ function generateShifts(startFrom: Date, days: number): Shift[] {
 				startTime: currentStart,
 				toStation: toCity,
 				endTime: segmentEnd,
-				vehicleType: rand() < 0.5 ? "EU160" : "EU44",
+				vehicleType: currentVehicles[0].type,
+				length: totalLength,
+				weight: totalWeight,
+				rollingStock: rollingStockSummary,
+				vehicles: currentVehicles
 			});
 			timeBudget -= dur;
 
 			// add a break before next segment if any
 			if (i < segments - 1 && timeBudget > 0.5) {
-				const maxBreak = Math.min(2, timeBudget - (segments - i - 1) * 1);
+				const maxBreak = Math.min(2, timeBudget - (segments - i - 1));
 				const br = Math.max(0.5, Math.min(maxBreak, randomInt(1, 2)));
 				const breakEnd = addHours(segmentEnd, br);
 				// add a small operation to represent vehicle return/receiving randomly
@@ -220,7 +270,14 @@ const generateTrainsFromShifts = (shifts: Shift[]): TrainData[] => {
 			continue;
 		}
 
-		const _types: TrainType[] = ["EC", "EN", "EIP", "EIC", "IC", "TLK"];
+		let _types: TrainType[] = ["EC", "EN", "EIP", "EIC", "IC", "TLK"];
+		if (operation.vehicleType === "ED250") {
+			_types = ["EIJ", "EIP"];
+		} else if (operation.vehicleType === "EN76") {
+			_types = ["EN", "IC"];
+		} else {
+			_types = ["EC", "EIC", "IC", "TLK"];
+		}
 		const _names = ["Barbakan", "Bolko", "Cegielski", "Chemik", "Chopin", "Galicja", "Górnik", "Górski", "Hańcza", "Hutnik", "Jagiełło", "Wyspiański", "Karkonosze", "Matejko", "Mazury", "Przemyślanin", "Reymont", "Mehoffer", "Wisłok", "San", "Wawel", "Witkacy", "Witos", "Ustronie", "Ślązak", "Zefir", "Łukasiewicz", "Wyczółkowski", "Włókniarz"];
 		let _tmp: TrainData = {
 			number: operation.trainNumber,
@@ -230,7 +287,11 @@ const generateTrainsFromShifts = (shifts: Shift[]): TrainData[] => {
 			startDate: operation.startTime,
 			endDate: operation.endTime,
 			startStation: operation.fromStation,
-			endStation: operation.toStation
+			endStation: operation.toStation,
+			length: operation.length,
+			weight: operation.weight,
+			rollingStock: operation.rollingStock,
+			vehicles: operation.vehicles
 		};
 		_data.push(_tmp);
 	}
@@ -254,6 +315,7 @@ export const driverProfile: DriverProfile = {
 		{ category: "EU07" },
 		{ category: "EP09" },
 		{ category: "EN76" },
+		{ category: "ED250" },
 	],
 	avatarUrl: "",
 };

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import { useSettingsStore } from "@/stores/settingsStore";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 
 export default function ThemeButton({folded = false}: {folded?: boolean}) {
 	const { theme, setTheme } = useSettingsStore();

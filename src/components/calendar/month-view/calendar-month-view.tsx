@@ -3,7 +3,7 @@ import { useCalendar } from "@/context/calendar-context";
 import { DayCell } from "@/components/calendar/month-view/day-cell";
 import { calculateMonthEventPositions, getCalendarCells } from "@/components/calendar/helpers";
 import type { Shift } from "@/lib/data.d";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 interface IProps {
 	singleDayEvents: Shift[];
 	multiDayEvents: Shift[];

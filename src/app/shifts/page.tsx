@@ -1,7 +1,7 @@
 "use client";
 import React, { Suspense } from "react";
 import ShiftData from "@/app/shifts/shift-data";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 
 export default function Shifts() {
 	const { t } = useTranslation();

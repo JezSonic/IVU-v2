@@ -1,34 +1,43 @@
 {
-  "2.0.3": {
-    "description": "New Quality-Of-Life additions and changes in data-loading logic to improve performance and overall stability",
-    "added": [
-      "Alerts filtered by type and paginated",
-      "Clicking on Upcoming shift card on Dashboard will now redirect to detailed shift information",
-      "Enhanced background logic for safe and optimized data loading",
-      "Added language dropdown to navbar for both desktop and mobiles"
-    ],
-    "date": 1761740817
-  },
-  "2.0.2": {
-    "description": "",
-    "fixed": ["Smaller issues with switching UI languages"],
-    "date": 1761675855
-  },
-  "2.0.1": {
-    "description": "Fix small UI issues and minor tweaks",
-    "added": [
-      "Clicking on any train number will now redirect to the train in train search"
-    ],
-    "removed": [
-      "UI theme switching due to it's buggy behavior"
-    ],
-    "fixed": [
-      "Smaller rendering issues"
-    ],
-    "date": 1761571360
-  },
-  "2.0.0": {
-    "description": "Added core functionalities",
-    "date": 1760354560
-  }
+    "2.0.4": {
+        "description": "Maintenance and feature update",
+        "added": [
+            "Added detailed journey data in shifts and train search view"
+        ],
+        "date": 1775919812
+    },
+    "2.0.3": {
+        "description": "New Quality-Of-Life additions and changes in data-loading logic to improve performance and overall stability",
+        "added": [
+            "Alerts filtered by type and paginated",
+            "Clicking on Upcoming shift card on Dashboard will now redirect to detailed shift information",
+            "Enhanced background logic for safe and optimized data loading",
+            "Added language dropdown to navbar for both desktop and mobiles"
+        ],
+        "date": 1761740817
+    },
+    "2.0.2": {
+        "description": "",
+        "fixed": [
+            "Smaller issues with switching UI languages"
+        ],
+        "date": 1761675855
+    },
+    "2.0.1": {
+        "description": "Fix small UI issues and minor tweaks",
+        "added": [
+            "Clicking on any train number will now redirect to the train in train search"
+        ],
+        "removed": [
+            "UI theme switching due to it's buggy behavior"
+        ],
+        "fixed": [
+            "Smaller rendering issues"
+        ],
+        "date": 1761571360
+    },
+    "2.0.0": {
+        "description": "Added core functionalities",
+        "date": 1760354560
+    }
 }

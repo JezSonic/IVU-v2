@@ -2,7 +2,7 @@
 
 import { useSettingsStore, UiLanguage } from "@/stores/settingsStore";
 import { env } from "@/lib/helpers/app";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 
 export default function LanguageButton({ folded = false }: { folded?: boolean }) {
 	const { t } = useTranslation();

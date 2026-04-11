@@ -2,7 +2,7 @@
 import { useCalendar } from "@/context/calendar-context";
 import type { Shift } from "@/lib/data.d";
 import React from "react";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-solid-svg-icons";

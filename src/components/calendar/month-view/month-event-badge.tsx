@@ -2,7 +2,7 @@ import { endOfDay, isSameDay, startOfDay } from "date-fns";
 import { useCalendar } from "@/context/calendar-context";
 import type { Shift } from "@/lib/data.d";
 import React from "react";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
 
 const _base = "mx-1 min-h-8 cursor-pointer flex flex-col size-auto select-none justify-between gap-1.5 truncate whitespace-nowrap rounded-md border p-1 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"

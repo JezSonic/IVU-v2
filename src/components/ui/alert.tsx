@@ -1,5 +1,5 @@
 "use client";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import Markdown from 'react-markdown'
 
 export default function Alert({

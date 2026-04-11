@@ -1,7 +1,7 @@
 import Sidebar from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import { useSettingsStore } from "@/stores/settingsStore";
 
 export default function UI({children}: Readonly<{children: React.ReactNode; }>) {

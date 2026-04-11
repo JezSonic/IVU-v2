@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import TrainSearch from "@/app/trains/train-search";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 
 export default function Trains() {
 	// const { t } = useTranslation();

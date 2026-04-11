@@ -1,4 +1,4 @@
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import { useModal } from "@/components/modal/modal-provider";
 import { Alert } from "@/lib/data.d"
 import Markdown from 'react-markdown'

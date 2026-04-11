@@ -7,7 +7,7 @@ import { Alert as AlertItem, Shift as ShiftItem, TrainData } from "@/lib/data.d"
 import { formatDate, formatTime, getDuration } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import { useSettingsStore } from "@/stores/settingsStore";
 import { Paginated } from "@/lib/helpers/app";
 import { alertsService, shiftsService, trainsService } from "@/services";

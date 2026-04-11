@@ -1,7 +1,7 @@
 import { differenceInDays, startOfDay } from "date-fns";
 import { Shift } from "@/lib/data.d";
 import { AgendaEventCard } from "@/components/calendar/agenda-view/agenda-event-card";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
 	date: Date;

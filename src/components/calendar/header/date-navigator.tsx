@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { getEventsCount, navigateDate, rangeText } from "@/components/calendar/helpers";
 import type { Shift } from "@/lib/data.d";
 import type { TCalendarView } from "@/components/calendar/types";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 

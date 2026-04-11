@@ -1,5 +1,5 @@
 import { Changelog as ChangelogType, getChangelog, Paginated } from "@/lib/helpers/app";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import Paginator from "@/components/ui/paginator";
 import { useEffect, useState } from "react";
 
@@ -8,7 +8,7 @@ export default function Changelog() {
 	const [changelog, setChangelog] = useState<Paginated<ChangelogType>>();
 	const [data, setData] = useState<ChangelogType>();
 	const loadChangelog = (page: number = 1) => {
-		const _data = getChangelog(page, 3)
+		const _data = getChangelog(page, 4)
 		setChangelog(_data);
 		setData(_data.data)
 	}
@@ -22,7 +22,7 @@ export default function Changelog() {
 			<h3 className={"text-xl pb-4"}>Changelog</h3>
 
 			{data == undefined ? <p>{t("loading")}</p> : (
-				<div className="flex flex-col gap-3 min-h-[570px]">
+				<div className="flex flex-col gap-3 min-h-142.5">
 					{Object.keys(data).map((key) => {
 						return (
 							<div key={key} className={"not-last:border-b border-gray-700 pb-2"}>

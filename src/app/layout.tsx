@@ -33,7 +33,6 @@ function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
 							{children}
 						</UI>
 					</ModalProvider>
-					<Script src="https://accounts.google.com/gsi/client" strategy="beforeInteractive"/>
 					<div id="modal-root" />
 				</I18nextProvider>
 			</body>

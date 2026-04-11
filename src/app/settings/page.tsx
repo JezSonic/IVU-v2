@@ -3,7 +3,7 @@ import Card from "@/components/ui/card";
 import defaultAvatar from "@/assets/img/avatar_default.png";
 import { ThemeMode, UiLanguage, useSettingsStore } from "@/stores/settingsStore";
 import { env } from "@/lib/helpers/app";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { userService } from "@/services";
 import { DriverProfile } from "@/lib/data.d"

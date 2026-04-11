@@ -10,7 +10,7 @@ import { CalendarProvider } from "@/context/calendar-context";
 import { shifts } from "@/lib/data";
 import { ClientContainer } from "@/components/calendar/client-container";
 import useWindowSize from "@/hooks/use-window-size";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 
 export default function ShiftData() {
 	const router = useRouter();

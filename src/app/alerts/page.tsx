@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Card from "@/components/ui/card";
 import Alert from "@/components/ui/alert";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import { Alert as AlertItem } from "@/lib/data.d";
 import { useModal } from "@/components/modal/modal-provider";
 import AlertModal from "@/app/alerts/alert-modal";

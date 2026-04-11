@@ -48,6 +48,17 @@ export type ShiftType =
 	| "shift_start"
 	| "shift_end"
 
+export interface Vehicle {
+	id: string; // Lp.
+	country: string; // Kraj rejestracji
+	operator: string; // Eksploatujący
+	type: string; // Typ (seria)
+	number: string; // Nr ekspl.
+	length: number; // Długość pojazdu
+	loadWeight?: number; // Masa ładunku
+	ownWeight: number; // Masa własna
+}
+
 /**
  * A single operation that belongs to a Shift's detailed timeline
  */
@@ -61,6 +72,10 @@ export interface ShiftOperation {
 	toStation: string;
 	endTime: Date;
 	vehicleType: string; // e.g., EU160, EU44 or "-"
+	length?: number; // meters
+	weight?: number; // tons
+	rollingStock?: string; // detailed list of wagons and locos
+	vehicles?: Vehicle[]; // detailed list of wagons and locos
 }
 
 /**
@@ -98,9 +113,13 @@ export interface TrainData {
 	startStation: string;
 	endStation: string;
 	assignedLoco?: string;
+	length?: number;
+	weight?: number;
+	rollingStock?: string;
+	vehicles?: Vehicle[];
 }
 
-export type TrainType = "TLK" | "IC" | "EIC" | "EIP" | "EC" | "EN"
+export type TrainType = "TLK" | "IC" | "EIC" | "EIP" | "EC" | "EN" | "EIJ"
 
 export interface DriverLicenseEntry {
 	category: string; // e.g., "EU07", "EN76"

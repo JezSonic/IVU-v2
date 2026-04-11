@@ -4,7 +4,7 @@ import { format, endOfDay, startOfDay, isSameMonth } from "date-fns";
 import { useCalendar } from "@/context/calendar-context";
 import { AgendaDayGroup } from "@/components/calendar/agenda-view/agenda-day-group";
 import type { Shift } from "@/lib/data.d";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface IProps {
